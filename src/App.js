@@ -33,7 +33,7 @@ function App() {
   return (
     <div className="App">
       <input className='input' type="text" value={pokename} onChange={searchPokemon} />
-      
+
       <div className='cards'>
         {
           data && data.map((item) => {
@@ -51,7 +51,7 @@ function App() {
         nextLabel="next >"
         onPageChange={handlePageClick}
         pageRangeDisplayed={5}
-        pageCount={10}
+        pageCount={5}
         previousLabel="< previous"
         pageClassName="page-item"
         pageLinkClassName="page-link"
