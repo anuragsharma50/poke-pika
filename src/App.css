@@ -8,7 +8,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
 }
 
 .input {
@@ -22,6 +21,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin-top: 50px;
 }
 
 .card {
@@ -45,4 +45,15 @@
   width: 95%;
   height: 95%;
   padding: 10px;
+}
+
+.searchContainer {
+  position: fixed;
+  z-index: 99;
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 2px solid;
 }

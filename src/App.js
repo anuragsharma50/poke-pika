@@ -2,37 +2,56 @@ import React,{ useState,useEffect } from 'react';
 import './App.css';
 import axios from 'axios';
 import Card from './components/Card';
-import ReactPaginate from 'react-paginate';
 
 function App() {
 
   const [data, setData] = useState([])
-  const [page, setPage] = useState(0)
+  const [limit, setLimit] = useState(0)
   const [pokename, setPokename] = useState()
+  let scrolling = false;
 
   useEffect(() => {
-    axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${page*60}&limit=60`).then((res) => {
+    axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${limit}&limit=10`).then((res) => {
       if(res.data != null){
-        setData(res.data.results)
+        let result = res.data.results
+
+        setData([...data,...result])
       }
-      // console.log(res.data.results)
       }).catch(err => {
       console.log(err)
-    })   
-  }, [page])
+    }) 
 
-  const handlePageClick = (e) => {
-    console.log(e)
-    setPage(e.selected)
-  }
+    window.addEventListener('scroll',() => {
+      scrolling = true;
+    })
+
+    setInterval(() => {
+      if (scrolling) {
+        scrolling = false;
+        let scrollPercentage = (document.documentElement.scrollTop + document.body.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight) * 100
+
+        if(scrollPercentage > 90) {
+          setLimit(limit => limit + 10)
+        }
+      }
+    },400);
+
+  }, [limit])
 
   const searchPokemon = (e) => {
-    setPokename(e.target.value.toLowerCase())
+    if(e.target.value === 'load'){
+      setPokename('')
+      setLimit(limit => limit + 10)
+    } else{
+      setPokename(e.target.value.toLowerCase())
+    }
   }
 
   return (
     <div className="App">
-      <input className='input' type="text" value={pokename} onChange={searchPokemon} />
+      <div className='searchContainer'>
+        <input className='input' type="text" value={pokename} onChange={searchPokemon} />
+      </div>
 
       <div className='cards'>
         {
@@ -45,26 +64,6 @@ function App() {
           })
         }
       </div>
-
-      <ReactPaginate
-        breakLabel="..."
-        nextLabel="next >"
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={5}
-        pageCount={5}
-        previousLabel="< previous"
-        pageClassName="page-item"
-        pageLinkClassName="page-link"
-        previousClassName="page-item"
-        previousLinkClassName="page-link"
-        nextClassName="page-item"
-        nextLinkClassName="page-link"
-        breakClassName="page-item"
-        breakLinkClassName="page-link"
-        containerClassName="pagination"
-        activeClassName="active"
-        renderOnZeroPageCount={null}
-      />
     </div>
   );
 }
